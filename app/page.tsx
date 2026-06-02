@@ -1,8 +1,19 @@
-export default function Home() {
-  return (
-    <main style={{ padding: 24, fontFamily: 'system-ui, sans-serif' }}>
-      <h1>Twitch Viewer Map</h1>
-      <p>Next.js App Router is ready.</p>
-    </main>
-  );
+import ClientPage from '@/components/ClientPage'
+import pool from '@/lib/db'
+import type { Pin } from '@/lib/types'
+
+async function getPins(): Promise<Pin[]> {
+  try {
+    const result = await pool.query<Pin>(
+      'SELECT id, city, username, lat, lng, created_at FROM pins ORDER BY created_at DESC'
+    )
+    return result.rows
+  } catch {
+    return []
+  }
+}
+
+export default async function Home() {
+  const pins = await getPins()
+  return <ClientPage initialPins={pins} />
 }
