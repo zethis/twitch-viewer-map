@@ -2,6 +2,8 @@ import ClientPage from '@/components/ClientPage'
 import pool from '@/lib/db'
 import type { Pin } from '@/lib/types'
 
+export const dynamic = 'force-dynamic'
+
 async function getPins(): Promise<Pin[]> {
   try {
     const result = await pool.query<Pin>(
