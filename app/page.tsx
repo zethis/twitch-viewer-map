@@ -10,7 +10,8 @@ async function getPins(): Promise<Pin[]> {
       'SELECT id, city, username, lat, lng, created_at FROM pins ORDER BY created_at DESC'
     )
     return result.rows
-  } catch {
+  } catch (err) {
+    console.error('[getPins] DB error:', err)
     return []
   }
 }

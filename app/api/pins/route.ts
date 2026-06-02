@@ -9,7 +9,8 @@ export async function GET() {
       'SELECT id, city, username, lat, lng, created_at FROM pins ORDER BY created_at DESC'
     )
     return NextResponse.json(result.rows)
-  } catch {
+  } catch (err) {
+    console.error('[GET /api/pins]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
@@ -49,7 +50,8 @@ export async function POST(request: NextRequest) {
       [city.trim(), normalizedUsername, lat, lng]
     )
     return NextResponse.json(result.rows[0], { status: 201 })
-  } catch {
+  } catch (err) {
+    console.error('[POST /api/pins]', err)
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }

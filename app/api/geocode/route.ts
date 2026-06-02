@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
   }
 
   try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&addressdetails=0`
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=5&addressdetails=0&featuretype=city`
     const response = await fetch(url, {
       headers: {
         'User-Agent': 'twitch-viewer-map/1.0',
@@ -30,7 +30,8 @@ export async function GET(request: NextRequest) {
     }))
 
     return NextResponse.json(results)
-  } catch {
+  } catch (err) {
+    console.error('[GET /api/geocode]', err)
     return NextResponse.json({ error: 'Geocoding unavailable' }, { status: 502 })
   }
 }
