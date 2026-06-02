@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS pins (
+  id          SERIAL PRIMARY KEY,
+  city        VARCHAR(255) NOT NULL,
+  username    VARCHAR(25),
+  lat         DOUBLE PRECISION NOT NULL,
+  lng         DOUBLE PRECISION NOT NULL,
+  created_at  TIMESTAMPTZ DEFAULT NOW()
+);
