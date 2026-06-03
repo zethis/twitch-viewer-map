@@ -95,8 +95,8 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
   }
 
   return (
-    <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-lg p-5 w-80 flex flex-col gap-3">
-      <h1 className="text-lg font-bold text-gray-800">📍 Add your location</h1>
+    <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-2xl ring-1 ring-black/5 p-5 w-80 max-w-[calc(100vw-32px)] flex flex-col gap-2.5">
+      <h1 className="text-base font-extrabold text-gray-800">📍 Add your location</h1>
 
       {/* City search */}
       <div className="relative">
@@ -111,7 +111,7 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
           onChange={(e) => handleQueryChange(e.target.value)}
           onBlur={() => setTimeout(() => setShowDropdown(false), 150)}
           onFocus={() => suggestions.length > 0 && setShowDropdown(true)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
           autoComplete="off"
         />
         {showDropdown && suggestions.length > 0 && (
@@ -120,7 +120,7 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
               <li
                 key={`${s.lat}-${s.lon}`}
                 onMouseDown={() => handleSelect(s)}
-                className="px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 cursor-pointer"
+                className="px-3 py-2 text-sm text-gray-700 hover:bg-purple-50 cursor-pointer transition-colors duration-100"
               >
                 {s.display_name}
               </li>
@@ -141,7 +141,7 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           maxLength={25}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
         />
       </div>
 
@@ -150,14 +150,14 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
         type="button"
         onClick={handleSubmit}
         disabled={!selected || loading}
-        className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-2 rounded-lg text-sm transition-colors"
+        className="w-full bg-purple-600 hover:bg-purple-700 hover:shadow-md disabled:bg-gray-300 disabled:cursor-not-allowed disabled:shadow-none text-white font-semibold py-2 rounded-lg text-sm transition-all duration-150 active:scale-95"
       >
         {loading ? 'Adding...' : 'Add me to the map'}
       </button>
 
       {/* Feedback */}
       {success && (
-        <p className="text-green-600 text-sm font-medium text-center">
+        <p className="text-green-600 text-sm font-medium text-center animate-fade-in transition-opacity">
           ✅ You&apos;ve been added to the map!
         </p>
       )}
