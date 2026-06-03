@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import AdminLogin from '@/components/AdminLogin'
-import Footer from '@/components/Footer'
+import Logo from '@/components/Logo'
 import SubmitForm from '@/components/SubmitForm'
 import { useEffect, useState } from 'react'
 import type { Pin } from '@/lib/types'
@@ -71,6 +71,10 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
       <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} />
+      {/* Logo - centered at top */}
+      <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, pointerEvents: 'none', width: '280px' }}>
+        <Logo />
+      </div>
       <div
         style={{
           position: 'absolute',
@@ -84,7 +88,6 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
       <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }}>
         {showAdminLogin && <AdminLogin onAuthChange={handleAuthChange} />}
       </div>
-      <Footer />
     </div>
   )
 }
