@@ -1,0 +1,7 @@
+Task 5 evidence:
+- app/api/pins/route.ts created
+- GET: queries all pins ordered by created_at DESC
+- POST: validates city (required, max 255), username (optional, max 25), lat (-90..90), lng (-180..180)
+- POST: applies rate limiting before validation
+- POST: inserts with parameterized query, returns 201 with created pin
+- Error handling: 400 for validation, 429 for rate limit, 500 for DB errors

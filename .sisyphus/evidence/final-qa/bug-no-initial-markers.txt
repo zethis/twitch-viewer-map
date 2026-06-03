@@ -1,0 +1,7 @@
+BUG: Server-side getPins() returns empty array despite DB having pins.
+RSC payload shows: "initialPins":[]
+API route /api/pins works correctly (returns 5+ pins via curl).
+Root cause: page.tsx getPins() silently catches DB error and returns [].
+The DB connection works for API routes but not for server components.
+This means markers never show on initial page load.
+After a user submits a new pin, handlePinAdded() fetches via client and pins appear.

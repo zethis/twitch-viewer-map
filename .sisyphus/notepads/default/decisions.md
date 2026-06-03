@@ -1,0 +1,3 @@
+- Used node:20-alpine for both build and runtime stages to keep the image simple and consistent.
+- Added .env to .gitignore so local secrets do not get committed.
+- Used `next.config.mjs` instead of `next.config.ts` because Next build rejected TypeScript config.

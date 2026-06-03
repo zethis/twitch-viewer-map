@@ -1,0 +1,49 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - generic:
+        - generic:
+          - button "Marker" [ref=e31] [cursor=pointer]
+          - button "Marker" [ref=e32] [cursor=pointer]
+          - button "Marker" [ref=e33] [cursor=pointer]
+          - button "Marker" [ref=e34] [cursor=pointer]
+          - button "Marker" [ref=e35] [cursor=pointer]
+          - button "Marker" [ref=e36] [cursor=pointer]
+          - button "Marker" [ref=e37] [cursor=pointer]
+          - button "Marker" [ref=e38] [cursor=pointer]
+          - button "Marker" [ref=e39] [cursor=pointer]
+          - button "Marker" [ref=e40] [cursor=pointer]
+          - button "Marker" [ref=e41] [cursor=pointer]
+          - button "Marker" [ref=e42] [cursor=pointer]
+          - button "Marker" [ref=e43] [cursor=pointer]
+          - button "Marker" [ref=e44] [cursor=pointer]
+          - button "Marker" [ref=e45] [cursor=pointer]
+          - button "Marker" [ref=e46] [cursor=pointer]
+      - generic:
+        - generic [ref=e5]:
+          - button "Zoom in" [ref=e6] [cursor=pointer]: +
+          - button "Zoom out" [ref=e7] [cursor=pointer]: −
+        - generic [ref=e8]:
+          - link "Leaflet" [ref=e9] [cursor=pointer]:
+            - /url: https://leafletjs.com
+            - img [ref=e10]
+            - text: Leaflet
+          - text: "| ©"
+          - link "OpenStreetMap" [ref=e14] [cursor=pointer]:
+            - /url: https://www.openstreetmap.org/copyright
+          - text: contributors
+    - generic [ref=e16]:
+      - heading "📍 Add your location" [level=1] [ref=e17]
+      - generic [ref=e18]:
+        - generic [ref=e19]: City *
+        - textbox "City *" [active] [ref=e20]:
+          - /placeholder: Search city...
+          - text: Berlin
+        - list [ref=e48]:
+          - listitem [ref=e49]: Berlin, Deutschland
+      - generic [ref=e21]:
+        - generic [ref=e22]: Username (optional)
+        - textbox "Username (optional)" [ref=e23]:
+          - /placeholder: Your Twitch name
+      - button "Add me to the map" [disabled] [ref=e24]
+  - alert [ref=e25]

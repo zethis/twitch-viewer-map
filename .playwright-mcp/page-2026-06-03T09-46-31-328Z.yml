@@ -1,0 +1,19 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e4]:
+      - heading "📍 Add your location" [level=1] [ref=e5]
+      - generic [ref=e6]:
+        - generic [ref=e7]: City *
+        - textbox "City *" [ref=e8]:
+          - /placeholder: Search city...
+      - generic [ref=e9]:
+        - generic [ref=e10]: Username (optional)
+        - textbox "Username (optional)" [ref=e11]:
+          - /placeholder: Your Twitch name
+      - button "Add me to the map" [disabled] [ref=e12]
+    - generic [ref=e15]:
+      - generic [ref=e16]: Admin Login
+      - textbox "Admin Login" [ref=e17]:
+        - /placeholder: Password
+      - button "Login as Admin" [ref=e18] [cursor=pointer]
+  - alert [ref=e19]

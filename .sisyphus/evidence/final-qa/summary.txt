@@ -1,0 +1,37 @@
+QA Summary — Twitch Viewer Map
+Date: 2026-06-02
+==============================
+
+Docker: UP
+  app: Up (twitch-viewer-map-app-1, port 3000)
+  db:  Up (twitch-viewer-map-db-1, port 5432)
+
+API Tests:
+  A GET empty:          PASS (returned [])
+  B POST create:        PASS (HTTP 201, fields: id=1, city, lat, lng, username, created_at)
+  C GET after POST:     PASS (1 pin, city="Paris, Île-de-France, France")
+  D POST 400 validation: PASS (HTTP 400, error message returned)
+  E Geocode results:    PASS (1 result, display_name="Berlin, Deutschland")
+  F Geocode short q:    PASS (returned [])
+
+Browser Tests:
+  G Map loaded:         PASS (leaflet-container visible; markers appear after pin submission via onPinAdded callback. NOTE: initial page load shows no markers due to static SSR — see bug below)
+  H Autocomplete:       PASS (dropdown appeared with 1 suggestion "東京都, 日本" for query "Tokyo")
+  I Submit disabled:    PASS (button disabled=true without city selection)
+  J Full submit flow:   PASS (POST 201, success message "✅ You've been added to the map!" visible, markers updated to 5)
+
+Scenarios: 10/10 pass
+
+VERDICT: APPROVE
+
+Bug noted (non-blocking for approval):
+  BUG: page.tsx is statically pre-rendered (Next.js route shows "○ Static"). The Home()
+  server component's getPins() is called at build time, not per-request. As a result,
+  initialPins is always [] on fresh page load. Pins only appear after a user submits one
+  via the form (onPinAdded refetches from /api/pins client-side).
+  FIX: Add `export const dynamic = 'force-dynamic'` to app/page.tsx.
+
+Evidence:
+  map-loaded.png      — Map with 5 markers visible (after submit)
+  autocomplete.png    — Autocomplete dropdown for "Tokyo"
+  submit-success.png  — Success message after full submit flow

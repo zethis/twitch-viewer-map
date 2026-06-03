@@ -1,0 +1,2 @@
+HTTP 200, 5 pins
+Body preview: [{"id":5,"city":"東京都, 日本","username":"QATest","lat":35.6768601,"lng":139.7638947,"created_at":"2026-06-02T12:28:17.315Z"},{"id":4,"city":"東京都, 日本","username":"QATest","lat":35.6768

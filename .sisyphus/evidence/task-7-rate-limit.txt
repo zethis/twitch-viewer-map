@@ -1,0 +1,8 @@
+Task 7 evidence:
+- lib/rate-limit.ts created
+- In-memory Map<string, {count, resetAt}>
+- Key = IP from x-forwarded-for header, fallback "unknown"
+- Limit: 5 requests per 60s window
+- Returns true (exceeded) if count >= LIMIT and window not expired
+- Returns false (allowed) otherwise, increments count
+- New window resets count to 1 when resetAt is in the past

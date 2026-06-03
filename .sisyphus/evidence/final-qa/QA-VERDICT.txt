@@ -1,0 +1,77 @@
+=== TWITCH VIEWER MAP — FINAL QA REPORT ===
+Date: 2026-06-02
+Tester: Playwright + curl automated QA
+
+--- API Scenarios: 5/5 pass ---
+
+S1 PASS  GET /api/pins → HTTP 200, 5 pins (JSON array confirmed)
+         Evidence: api-get-pins.txt
+
+S2 PASS  POST /api/pins valid body → HTTP 201
+         Body: {"id":6,"city":"Lyon, France","username":"QATester","lat":45.764,"lng":4.8357}
+         Evidence: api-post-pin.txt
+
+S3 PASS  POST /api/pins missing city → HTTP 400
+         Body: {"error":"city is required and must be a non-empty string under 255 chars"}
+         Evidence: api-post-invalid.txt
+
+S4 PASS  GET /api/geocode?q=Paris → HTTP 200, 4 suggestions
+         First result: "Paris, Île-de-France, France métropolitaine, France"
+         Evidence: api-geocode.txt
+
+S5 PASS  Rate limit — LIMIT=5 per 60s window confirmed (lib/rate-limit.ts)
+         Prior test calls (S2 + S3) consumed 2 of 5 slots in the window.
+         Remaining 3 slots used by test requests 1-3 (HTTP 201).
+         Request 4 onward → HTTP 429 (correct behavior).
+         The rate limiter functions correctly.
+         Evidence: api-rate-limit.txt
+
+--- Browser Scenarios: 5/6 pass ---
+
+S6 PASS  http://localhost:3000 loaded, .leaflet-container present and visible
+         Map renders with OSM tiles loaded
+         Evidence: map-loaded.png
+
+S7 FAIL* Initial marker count = 0
+         ROOT CAUSE: Server-side getPins() silently returns [] (DB connection
+         fails in SSR context). RSC payload shows "initialPins":[]
+         API route /api/pins works correctly. Bug documented: bug-no-initial-markers.txt
+         After client-side pin submission, ALL markers appear (16 after S9).
+
+S8 PASS  Typed "Paris" → autocomplete dropdown showed 4 suggestions immediately
+         Evidence: autocomplete.png
+
+S9 PASS  Clicked first suggestion "Paris, Île-de-France, France..." 
+         Typed username "BrowserQA", clicked submit
+         Form reset to empty (success behavior confirmed)
+         Note: 5s transient success toast missed by screenshot timing; form reset proves 201 response
+         Evidence: submit-success.png
+
+S10 PASS Marker count: 0 → 16 after submit
+         Increase of 16 = all existing DB pins + newly added BrowserQA pin
+         Count increased as expected (SSR bug caused 0 initial count, not a submit bug)
+
+S11 PASS Typed "Berlin" in city input WITHOUT clicking a suggestion
+         Submit button correctly remained disabled (disabled=true confirmed via JS eval)
+         Evidence: submit-disabled.png
+
+--- BUG FOUND ---
+BUG-001 [MEDIUM] Server-side markers not shown on initial page load
+         page.tsx getPins() catches DB errors and returns [] silently.
+         initialPins:[] passed to ClientPage → no markers on first render.
+         The API route (/api/pins) works correctly with same DB pool.
+         After user submits a pin, handlePinAdded() fetches client-side and all pins appear.
+         WORKAROUND: Refresh via submission works. Manual refresh does NOT.
+         Suggested fix: investigate DB connection in server component context,
+         or switch to client-side fetch on mount.
+
+=== SUMMARY ===
+API Scenarios: 5/5 pass
+Browser Scenarios: 5/6 pass (S7 fails due to BUG-001)
+Failed: S7 — marker count 0 on initial load (server-side SSR DB bug)
+
+VERDICT: REJECT
+
+The app has a critical rendering bug: existing pins never appear on initial page load
+because the server component cannot fetch from the database. Users see an empty map
+until they submit their own pin. This must be fixed before production approval.

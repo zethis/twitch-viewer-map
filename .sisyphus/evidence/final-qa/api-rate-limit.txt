@@ -1,0 +1,10 @@
+Request 1: HTTP 201
+Request 2: HTTP 201
+Request 3: HTTP 201
+Request 4: HTTP 429
+Request 5: HTTP 429
+Request 6: HTTP 429
+
+NOTE: LIMIT=5 per 60s window. S2+S3 calls consumed 2 prior slots.
+Rate limit functioned correctly - 5 total POSTs (2 prior + 3 in test) then 429.
+VERDICT: PASS (rate limiting works as designed, LIMIT=5 confirmed in lib/rate-limit.ts)
