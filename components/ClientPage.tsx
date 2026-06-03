@@ -75,7 +75,7 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
         style={{
           position: 'absolute',
           top: '16px',
-          left: '16px',
+          left: '55px',
           zIndex: 1000,
         }}
       >
