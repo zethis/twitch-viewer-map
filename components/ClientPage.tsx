@@ -1,9 +1,11 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import SubmitForm from '@/components/SubmitForm'
+import AdminLogin from '@/components/AdminLogin'
 import type { Pin } from '@/lib/types'
+import { isAdminAuthenticated, getAdminPassword, setAdminAuthenticated } from '@/lib/admin-auth'
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false })
 
@@ -13,6 +15,15 @@ interface ClientPageProps {
 
 export default function ClientPage({ initialPins }: ClientPageProps) {
   const [pins, setPins] = useState<Pin[]>(initialPins)
+  const [isAdmin, setIsAdmin] = useState(false)
+
+  useEffect(() => {
+    setIsAdmin(isAdminAuthenticated())
+  }, [])
+
+  const handleAuthChange = () => {
+    setIsAdmin(isAdminAuthenticated())
+  }
 
   const handlePinAdded = async () => {
     try {
@@ -24,9 +35,35 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
     }
   }
 
+  const handlePinDeleted = async (pinId: number) => {
+    const password = getAdminPassword()
+    if (!password) {
+      window.alert('Session expired. Please log in again.')
+      setIsAdmin(false)
+      setAdminAuthenticated(false)
+      return
+    }
+    try {
+      const res = await fetch(`/api/pins/${pinId}`, {
+        method: 'DELETE',
+        headers: { 'x-admin-password': password },
+      })
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        window.alert(data.error ?? 'Failed to delete pin')
+        return
+      }
+      const pinsRes = await fetch('/api/pins')
+      const data: Pin[] = await pinsRes.json()
+      setPins(data)
+    } catch {
+      // silent — map reflects last known state
+    }
+  }
+
   return (
     <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      <MapView pins={pins} />
+      <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} />
       <div
         style={{
           position: 'absolute',
@@ -36,6 +73,9 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
         }}
       >
         <SubmitForm onPinAdded={handlePinAdded} />
+      </div>
+      <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }}>
+        <AdminLogin onAuthChange={handleAuthChange} />
       </div>
     </div>
   )
