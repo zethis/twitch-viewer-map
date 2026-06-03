@@ -1,9 +1,10 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useState, useEffect } from 'react'
-import SubmitForm from '@/components/SubmitForm'
 import AdminLogin from '@/components/AdminLogin'
+import Footer from '@/components/Footer'
+import SubmitForm from '@/components/SubmitForm'
+import { useEffect, useState } from 'react'
 import type { Pin } from '@/lib/types'
 import { isAdminAuthenticated, getAdminPassword, setAdminAuthenticated } from '@/lib/admin-auth'
 
@@ -79,6 +80,7 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
       <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }}>
         <AdminLogin onAuthChange={handleAuthChange} />
       </div>
+      <Footer />
     </div>
   )
 }
