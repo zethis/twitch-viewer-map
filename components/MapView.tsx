@@ -14,9 +14,11 @@ L.Icon.Default.mergeOptions({
 
 interface MapViewProps {
   pins: Pin[]
+  isAdmin: boolean
+  onDeletePin: (pinId: number) => void
 }
 
-export default function MapView({ pins }: MapViewProps) {
+export default function MapView({ pins, isAdmin, onDeletePin }: MapViewProps) {
   return (
     <div style={{ height: '100vh', width: '100%', position: 'relative' }}>
       <MapContainer
@@ -35,6 +37,19 @@ export default function MapView({ pins }: MapViewProps) {
               <strong>{pin.username ?? 'Anonymous'}</strong>
               <br />
               {pin.city}
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm('Delete this pin? This cannot be undone.')) {
+                      onDeletePin(pin.id)
+                    }
+                  }}
+                  style={{ display: 'block', marginTop: '6px', color: '#ef4444', background: 'none', border: '1px solid #ef4444', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px', width: '100%' }}
+                >
+                  Delete
+                </button>
+              )}
             </Popup>
           </Marker>
         ))}
