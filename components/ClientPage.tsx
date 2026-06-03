@@ -17,9 +17,13 @@ interface ClientPageProps {
 export default function ClientPage({ initialPins }: ClientPageProps) {
   const [pins, setPins] = useState<Pin[]>(initialPins)
   const [isAdmin, setIsAdmin] = useState(false)
+  const [showAdminLogin, setShowAdminLogin] = useState(false)
 
   useEffect(() => {
     setIsAdmin(isAdminAuthenticated())
+    // Check if ?admin=true is in URL query string
+    const params = new URLSearchParams(window.location.search)
+    setShowAdminLogin(params.get('admin') === 'true')
   }, [])
 
   const handleAuthChange = () => {
@@ -71,14 +75,14 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
         style={{
           position: 'absolute',
           top: '16px',
-          left: '16px',
+          left: '55px',
           zIndex: 1000,
         }}
       >
         <SubmitForm onPinAdded={handlePinAdded} />
       </div>
       <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }}>
-        <AdminLogin onAuthChange={handleAuthChange} />
+        {showAdminLogin && <AdminLogin onAuthChange={handleAuthChange} />}
       </div>
       <Footer />
     </div>
