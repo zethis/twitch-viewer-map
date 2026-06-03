@@ -4,6 +4,7 @@ import dynamic from 'next/dynamic'
 import AdminLogin from '@/components/AdminLogin'
 import Footer from '@/components/Footer'
 import SubmitForm from '@/components/SubmitForm'
+import RecentRegistrations from '@/components/RecentRegistrations'
 import { useEffect, useState } from 'react'
 import type { Pin } from '@/lib/types'
 import { isAdminAuthenticated, getAdminPassword, setAdminAuthenticated } from '@/lib/admin-auth'
@@ -80,6 +81,9 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
         }}
       >
         <SubmitForm onPinAdded={handlePinAdded} />
+        <div className="mt-3">
+          <RecentRegistrations pins={pins} />
+        </div>
       </div>
       <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }}>
         {showAdminLogin && <AdminLogin onAuthChange={handleAuthChange} />}
