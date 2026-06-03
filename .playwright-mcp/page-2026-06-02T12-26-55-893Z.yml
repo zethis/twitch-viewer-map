@@ -1,0 +1,34 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e15]:
+      - generic:
+        - generic:
+          - button "Marker" [ref=e28] [cursor=pointer]
+          - button "Marker" [ref=e29] [cursor=pointer]
+          - button "Marker" [ref=e30] [cursor=pointer]
+          - button "Marker" [ref=e31] [cursor=pointer]
+      - generic:
+        - generic [ref=e16]:
+          - button "Zoom in" [ref=e17] [cursor=pointer]: +
+          - button "Zoom out" [ref=e18] [cursor=pointer]: −
+        - generic [ref=e19]:
+          - link "Leaflet" [ref=e20] [cursor=pointer]:
+            - /url: https://leafletjs.com
+            - img [ref=e21]
+            - text: Leaflet
+          - text: "| ©"
+          - link "OpenStreetMap" [ref=e25] [cursor=pointer]:
+            - /url: https://www.openstreetmap.org/copyright
+          - text: contributors
+    - generic [ref=e4]:
+      - heading "📍 Add your location" [level=1] [ref=e5]
+      - generic [ref=e6]:
+        - generic [ref=e7]: City *
+        - textbox "City *" [ref=e8]:
+          - /placeholder: Search city...
+      - generic [ref=e9]:
+        - generic [ref=e10]: Username (optional)
+        - textbox "Username (optional)" [ref=e11]:
+          - /placeholder: Your Twitch name
+      - button "Add me to the map" [disabled] [ref=e12]
+  - alert [ref=e13]

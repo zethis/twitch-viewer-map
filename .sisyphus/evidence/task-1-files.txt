@@ -1,0 +1,10 @@
+total 40
+drwxr-xr-x@  9 zethis  staff  288 Jun  2 14:06 .
+drwxr-xr-x@ 14 zethis  staff  448 Jun  2 13:46 ..
+-rw-r--r--@  1 zethis  staff  144 Jun  2 14:06 .env
+-rw-r--r--@  1 zethis  staff  144 Jun  2 14:06 .env.example
+-rw-r--r--@  1 zethis  staff   26 Jun  2 14:06 .gitignore
+drwxr-xr-x@  5 zethis  staff  160 Jun  2 14:06 .sisyphus
+-rw-r--r--@  1 zethis  staff  386 Jun  2 14:06 Dockerfile
+drwxr-xr-x@  2 zethis  staff   64 Jun  2 14:06 db
+-rw-r--r--@  1 zethis  staff  559 Jun  2 14:06 docker-compose.yml

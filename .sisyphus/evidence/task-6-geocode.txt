@@ -1,0 +1,6 @@
+Task 6 evidence:
+- app/api/geocode/route.ts created
+- Returns [] for q shorter than 2 chars
+- Calls Nominatim with User-Agent: twitch-viewer-map/1.0
+- Maps response to GeocodeResult[] {display_name, lat, lon}
+- Returns 502 on Nominatim failure

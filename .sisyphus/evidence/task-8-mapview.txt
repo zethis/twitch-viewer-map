@@ -1,0 +1,10 @@
+Task 8 evidence:
+- components/MapView.tsx created as 'use client' component
+- Props: pins: Pin[]
+- Uses react-leaflet: MapContainer, TileLayer, Marker, Popup
+- Default center [20, 0], zoom 2 (world overview)
+- TileLayer: OpenStreetMap tiles with correct attribution
+- Leaflet default icon fix: L.Icon.Default.mergeOptions with /leaflet/*.png paths
+- Marker icons copied to public/leaflet/
+- Empty state: overlay message "No viewers yet..." when pins.length === 0
+- Must be dynamically imported with ssr: false in app/page.tsx

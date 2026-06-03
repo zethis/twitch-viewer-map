@@ -1,0 +1,7 @@
+Task 9 evidence:
+- components/SubmitForm.tsx: city autocomplete with 300ms debounce, username input (max 25), submit disabled without selection
+- components/ClientPage.tsx: client wrapper with useState for pins, dynamic MapView (ssr:false), SubmitForm overlay
+- app/page.tsx: server component fetches pins from DB, passes to ClientPage
+- Submit flow: POST /api/pins with {city, username?, lat, lng} → 201 → success message + reload pins
+- Error handling: 429 → "Too many submissions", other errors shown from response
+- Build: npm run build passes

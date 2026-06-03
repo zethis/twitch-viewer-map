@@ -1,0 +1,20 @@
+   Generating static pages (2/6) 
+   Generating static pages (4/6) 
+ ✓ Generating static pages (6/6)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ○ /                                    2.62 kB        90.4 kB
+├ ○ /_not-found                          875 B          88.6 kB
+├ ƒ /api/geocode                         0 B                0 B
+└ ƒ /api/pins                            0 B                0 B
++ First Load JS shared by all            87.7 kB
+  ├ chunks/117-47eed60c16e5d871.js       31.7 kB
+  ├ chunks/fd9d1056-f8a2d551cbb94c85.js  53.7 kB
+  └ other shared chunks (total)          2.35 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+

@@ -1,0 +1,3 @@
+Task 3 evidence:
+- db/init.sql: creates pins table with columns id, city, username, lat, lng, created_at
+- lib/db.ts: exports singleton pg.Pool using DATABASE_URL env var

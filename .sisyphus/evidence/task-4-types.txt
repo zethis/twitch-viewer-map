@@ -1,0 +1,2 @@
+Task 4 evidence:
+- lib/types.ts created with Pin, CreatePinBody, GeocodeResult interfaces

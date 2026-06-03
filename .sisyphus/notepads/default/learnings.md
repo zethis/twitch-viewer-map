@@ -1,0 +1,4 @@
+- Created minimal Docker Compose + multi-stage Dockerfile scaffold for Next.js standalone output.
+- Kept env vars aligned between .env.example and .env for local development.
+- Next.js 14.2.33 requires `next.config.mjs` (not `next.config.ts`) for config files in this setup.
+- `react-leaflet@4` is compatible with React 18; `react-leaflet@5` pulled a React 19 peer conflict.

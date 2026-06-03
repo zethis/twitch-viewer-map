@@ -1,0 +1,37 @@
+- generic [ref=e1]:
+  - generic [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - generic:
+          - generic [ref=e5]:
+            - button "Zoom in" [ref=e6] [cursor=pointer]: +
+            - button "Zoom out" [ref=e7] [cursor=pointer]: −
+          - generic [ref=e8]:
+            - link "Leaflet" [ref=e9] [cursor=pointer]:
+              - /url: https://leafletjs.com
+              - img [ref=e10]
+              - text: Leaflet
+            - text: "| ©"
+            - link "OpenStreetMap" [ref=e14] [cursor=pointer]:
+              - /url: https://www.openstreetmap.org/copyright
+            - text: contributors
+      - generic:
+        - paragraph: No viewers yet — be the first to add your location!
+    - generic [ref=e16]:
+      - heading "📍 Add your location" [level=1] [ref=e17]
+      - generic [ref=e18]:
+        - generic [ref=e19]: City *
+        - textbox "City *" [active] [ref=e20]:
+          - /placeholder: Search city...
+          - text: Paris
+        - list [ref=e26]:
+          - listitem [ref=e27]: Paris, Île-de-France, France métropolitaine, France
+          - listitem [ref=e28]: Paris, Île-de-France, France métropolitaine, France
+          - listitem [ref=e29]: Paris, Lamar County, Texas, United States
+          - listitem [ref=e30]: Paris, Île-de-France, France métropolitaine, France
+      - generic [ref=e21]:
+        - generic [ref=e22]: Username (optional)
+        - textbox "Username (optional)" [ref=e23]:
+          - /placeholder: Your Twitch name
+      - button "Add me to the map" [disabled] [ref=e24]
+  - alert [ref=e25]

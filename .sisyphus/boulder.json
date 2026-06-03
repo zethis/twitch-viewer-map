@@ -1,0 +1,32 @@
+{
+  "active_plan": "/Users/zethis/projects/twitch-viewer-map/.sisyphus/plans/delete-map-point.md",
+  "started_at": "2026-06-03T09:34:15.203Z",
+  "session_ids": [
+    "ses_1736ac6a5ffes3JtnWfOY1Ur6i"
+  ],
+  "session_origins": {
+    "ses_1736ac6a5ffes3JtnWfOY1Ur6i": "direct"
+  },
+  "plan_name": "delete-map-point",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Create DELETE API endpoint with admin authentication",
+      "session_id": "ses_17329abfcffeKeG9XBKEdaTqVi",
+      "agent": "Sisyphus-Junior",
+      "category": "quick",
+      "updated_at": "2026-06-03T09:36:28.648Z"
+    },
+    "todo:4": {
+      "task_key": "todo:4",
+      "task_label": "4",
+      "task_title": "Add delete buttons to MapView and wire ClientPage callback",
+      "session_id": "ses_1732584e8ffeQw3U5KxLpMsw0F",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-06-03T09:40:37.772Z"
+    }
+  }
+}

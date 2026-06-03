@@ -11,23 +11,52 @@ interface AdminLoginProps {
 export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
   const [isAdmin, setIsAdmin] = useState(() => isAdminAuthenticated())
   const [password, setPassword] = useState('')
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     setIsAdmin(isAdminAuthenticated())
   }, [])
 
-  const handleLogin = () => {
-    storeAdminPassword(password)
-    setAdminAuthenticated(true)
-    setIsAdmin(true)
-    setPassword('')
-    onAuthChange?.()
+  const handleLogin = async () => {
+    if (!password.trim()) {
+      setError('Password required')
+      return
+    }
+
+    setIsLoading(true)
+    setError('')
+
+    try {
+      const res = await fetch('/api/pins/99999999', {
+        method: 'DELETE',
+        headers: { 'x-admin-password': password },
+      })
+
+      if (res.status === 401) {
+        setError('Invalid password')
+        setIsLoading(false)
+        return
+      }
+
+      storeAdminPassword(password)
+      setAdminAuthenticated(true)
+      setIsAdmin(true)
+      setPassword('')
+      setError('')
+      onAuthChange?.()
+    } catch {
+      setError('Connection error')
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleLogout = () => {
     setAdminAuthenticated(false)
     setIsAdmin(false)
     setPassword('')
+    setError('')
     onAuthChange?.()
   }
 
@@ -71,12 +100,18 @@ export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
           <label htmlFor="admin-password" style={{ fontSize: '14px', fontWeight: 700, color: '#1f2937' }}>
             Admin Login
           </label>
+          {error && (
+            <div style={{ fontSize: '12px', color: '#ef4444', padding: '4px 0' }}>
+              {error}
+            </div>
+          )}
           <input
             id="admin-password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             placeholder="Password"
+            disabled={isLoading}
             style={{
               width: '100%',
               border: '1px solid #d1d5db',
@@ -84,10 +119,12 @@ export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
               padding: '8px 10px',
               fontSize: '14px',
               outline: 'none',
+              opacity: isLoading ? 0.6 : 1,
             }}
           />
           <button
             type="submit"
+            disabled={isLoading}
             style={{
               border: 'none',
               background: '#7c3aed',
@@ -96,10 +133,11 @@ export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
               padding: '8px 12px',
               fontSize: '14px',
               fontWeight: 600,
-              cursor: 'pointer',
+              cursor: isLoading ? 'not-allowed' : 'pointer',
+              opacity: isLoading ? 0.6 : 1,
             }}
           >
-            Login as Admin
+            {isLoading ? 'Checking...' : 'Login as Admin'}
           </button>
         </form>
       )}

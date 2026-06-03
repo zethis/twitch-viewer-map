@@ -37,6 +37,7 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
 
   const handlePinDeleted = async (pinId: number) => {
     const password = getAdminPassword()
+    console.log('[DEBUG] Delete attempt:', { pinId, hasPassword: !!password, passwordLength: password?.length })
     if (!password) {
       window.alert('Session expired. Please log in again.')
       setIsAdmin(false)
@@ -48,6 +49,7 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
         method: 'DELETE',
         headers: { 'x-admin-password': password },
       })
+      console.log('[DEBUG] Delete response:', { status: res.status, ok: res.ok })
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         window.alert(data.error ?? 'Failed to delete pin')
@@ -56,8 +58,8 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
       const pinsRes = await fetch('/api/pins')
       const data: Pin[] = await pinsRes.json()
       setPins(data)
-    } catch {
-      // silent — map reflects last known state
+    } catch (err) {
+      console.error('[DEBUG] Delete error:', err)
     }
   }
 

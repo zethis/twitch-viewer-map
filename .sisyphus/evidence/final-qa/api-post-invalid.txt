@@ -1,0 +1,2 @@
+HTTP 400
+{"error":"city is required and must be a non-empty string under 255 chars"}
