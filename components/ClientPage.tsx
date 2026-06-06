@@ -71,10 +71,23 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
     }
   }
 
+  const handlePinEdited = async (pinId: number, city: string, lat: number, lng: number) => {
+    const res = await fetch(`/api/pins/${pinId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ city, lat, lng }),
+    })
+    if (res.ok) {
+      const pinsRes = await fetch('/api/pins')
+      const data: Pin[] = await pinsRes.json()
+      setPins(data)
+    }
+  }
+
   return (
     <SessionProvider>
       <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-        <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} />
+        <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} onEditPin={handlePinEdited} />
         {/* Logo - centered at top */}
         <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, pointerEvents: 'none', width: '280px' }}>
           <Logo />
