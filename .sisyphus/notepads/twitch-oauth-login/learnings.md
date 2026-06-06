@@ -1,0 +1,3 @@
+- Added nullable Twitch profile fields to the shared Pin type so API responses and future migration columns stay aligned.
+- Kept the pins GET query in sync with the schema by selecting the new Twitch columns.
+- For env wiring, keep `.env.example` and `docker-compose.yml` in sync and avoid duplicating existing placeholders.

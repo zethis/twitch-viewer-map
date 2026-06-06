@@ -1,0 +1,1 @@
+- Added a standalone SQL migration instead of touching the base schema file, so the change can be applied later without altering existing setup.
