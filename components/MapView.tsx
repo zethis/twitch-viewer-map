@@ -1,6 +1,7 @@
 'use client'
 
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import MarkerClusterGroup from 'react-leaflet-cluster'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import type { Pin } from '@/lib/types'
@@ -31,28 +32,30 @@ export default function MapView({ pins, isAdmin, onDeletePin }: MapViewProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         />
-        {pins.map((pin) => (
-          <Marker key={pin.id} position={[pin.lat, pin.lng]}>
-            <Popup>
-              <strong>{pin.username ?? 'Anonymous'}</strong>
-              <br />
-              {pin.city}
-              {isAdmin && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (window.confirm('Delete this pin? This cannot be undone.')) {
-                      onDeletePin(pin.id)
-                    }
-                  }}
-                  style={{ display: 'block', marginTop: '6px', color: '#ef4444', background: 'none', border: '1px solid #ef4444', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px', width: '100%' }}
-                >
-                  Delete
-                </button>
-              )}
-            </Popup>
-          </Marker>
-        ))}
+        <MarkerClusterGroup>
+          {pins.map((pin) => (
+            <Marker key={pin.id} position={[pin.lat, pin.lng]}>
+              <Popup>
+                <strong>{pin.username ?? 'Anonymous'}</strong>
+                <br />
+                {pin.city}
+                {isAdmin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (window.confirm('Delete this pin? This cannot be undone.')) {
+                        onDeletePin(pin.id)
+                      }
+                    }}
+                    style={{ display: 'block', marginTop: '6px', color: '#ef4444', background: 'none', border: '1px solid #ef4444', borderRadius: '4px', padding: '4px 8px', cursor: 'pointer', fontSize: '12px', width: '100%' }}
+                  >
+                    Delete
+                  </button>
+                )}
+              </Popup>
+            </Marker>
+          ))}
+        </MarkerClusterGroup>
       </MapContainer>
       {pins.length === 0 && (
         <div
