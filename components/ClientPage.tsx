@@ -1,15 +1,16 @@
 'use client'
 
 import dynamic from 'next/dynamic'
+import { useEffect, useState } from 'react'
+
 import AdminLogin from '@/components/AdminLogin'
 import Logo from '@/components/Logo'
 import RecentRegistrations from '@/components/RecentRegistrations'
-import SubmitForm from '@/components/SubmitForm'
 import SessionProvider from '@/components/SessionProvider'
+import SubmitForm from '@/components/SubmitForm'
 import TwitchLoginButton from '@/components/TwitchLoginButton'
-import { useEffect, useState } from 'react'
+import { getAdminPassword, isAdminAuthenticated } from '@/lib/admin-auth'
 import type { Pin } from '@/lib/types'
-import { isAdminAuthenticated, getAdminPassword, setAdminAuthenticated } from '@/lib/admin-auth'
 
 const MapView = dynamic(() => import('@/components/MapView'), { ssr: false })
 
@@ -45,19 +46,17 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
 
   const handlePinDeleted = async (pinId: number) => {
     const password = getAdminPassword()
-    console.log('[DEBUG] Delete attempt:', { pinId, hasPassword: !!password, passwordLength: password?.length })
-    if (!password) {
-      window.alert('Session expired. Please log in again.')
-      setIsAdmin(false)
-      setAdminAuthenticated(false)
-      return
-    }
     try {
+      const headers: Record<string, string> = {}
+      if (password) {
+        headers['x-admin-password'] = password
+      }
+
       const res = await fetch(`/api/pins/${pinId}`, {
         method: 'DELETE',
-        headers: { 'x-admin-password': password },
+        headers,
       })
-      console.log('[DEBUG] Delete response:', { status: res.status, ok: res.ok })
+
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
         window.alert(data.error ?? 'Failed to delete pin')
@@ -67,7 +66,7 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
       const data: Pin[] = await pinsRes.json()
       setPins(data)
     } catch (err) {
-      console.error('[DEBUG] Delete error:', err)
+      console.error('Delete error:', err)
     }
   }
 
