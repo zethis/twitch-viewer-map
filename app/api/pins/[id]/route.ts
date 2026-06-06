@@ -4,35 +4,29 @@ import pool from '@/lib/db'
 import { getServerSession } from '@/lib/auth'
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
-  // Validate id first
   const parsedId = parseInt(params.id, 10)
   if (!/^[1-9]\d*$/.test(params.id) || !Number.isFinite(parsedId) || parsedId <= 0) {
     return NextResponse.json({ error: 'Invalid pin id' }, { status: 400 })
   }
 
-  // Try admin password path
   const envPassword = process.env.ADMIN_PASSWORD
   const requestPassword = request.headers.get('x-admin-password')
   const isAdmin = envPassword && requestPassword === envPassword
 
-  // Try owner session path
   const session = await getServerSession()
   const sessionUserId = session?.user?.id ?? null
 
-  // If neither auth method provided, reject
   if (!isAdmin && !sessionUserId) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
 
   try {
     if (isAdmin) {
-      // Admin can delete any pin
       const result = await pool.query('DELETE FROM pins WHERE id = $1 RETURNING id', [parsedId])
       if (result.rowCount === 0) return NextResponse.json({ error: 'Pin not found' }, { status: 404 })
       return NextResponse.json({ message: 'Pin deleted', id: parsedId })
     }
 
-    // Owner path: check ownership
     const pin = await pool.query('SELECT twitch_id FROM pins WHERE id = $1', [parsedId])
     if (pin.rowCount === 0) return NextResponse.json({ error: 'Pin not found' }, { status: 404 })
     if (pin.rows[0].twitch_id !== sessionUserId) {
