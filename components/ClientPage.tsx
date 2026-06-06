@@ -5,6 +5,8 @@ import AdminLogin from '@/components/AdminLogin'
 import Logo from '@/components/Logo'
 import RecentRegistrations from '@/components/RecentRegistrations'
 import SubmitForm from '@/components/SubmitForm'
+import SessionProvider from '@/components/SessionProvider'
+import TwitchLoginButton from '@/components/TwitchLoginButton'
 import { useEffect, useState } from 'react'
 import type { Pin } from '@/lib/types'
 import { isAdminAuthenticated, getAdminPassword, setAdminAuthenticated } from '@/lib/admin-auth'
@@ -70,28 +72,31 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
   }
 
   return (
-    <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
-      <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} />
-      {/* Logo - centered at top */}
-      <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, pointerEvents: 'none', width: '280px' }}>
-        <Logo />
-      </div>
-      <div
-        style={{
-          position: 'absolute',
-          top: '16px',
-          left: '55px',
-          zIndex: 1000,
-        }}
-      >
-        <SubmitForm onPinAdded={handlePinAdded} />
-        <div className="mt-3">
-          <RecentRegistrations pins={pins} />
+    <SessionProvider>
+      <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
+        <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} />
+        {/* Logo - centered at top */}
+        <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, pointerEvents: 'none', width: '280px' }}>
+          <Logo />
+        </div>
+        <div
+          style={{
+            position: 'absolute',
+            top: '16px',
+            left: '55px',
+            zIndex: 1000,
+          }}
+        >
+          <SubmitForm onPinAdded={handlePinAdded} />
+          <div className="mt-3">
+            <RecentRegistrations pins={pins} />
+          </div>
+        </div>
+        <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }} className="flex flex-col gap-2 items-end">
+          <TwitchLoginButton />
+          {showAdminLogin && <AdminLogin onAuthChange={handleAuthChange} />}
         </div>
       </div>
-      <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }}>
-        {showAdminLogin && <AdminLogin onAuthChange={handleAuthChange} />}
-      </div>
-    </div>
+    </SessionProvider>
   )
 }
