@@ -1,1 +1,2 @@
 - Added a standalone SQL migration instead of touching the base schema file, so the change can be applied later without altering existing setup.
+- Added a dedicated `lib/auth-client.ts` file instead of putting `useSession()` directly beside server auth exports, because Next.js App Router treats that mix as a client/server boundary risk.

@@ -1,0 +1,1 @@
+- `next build` passes, but existing database initialization logs `getaddrinfo ENOTFOUND db` during static generation in the local environment before recovering.

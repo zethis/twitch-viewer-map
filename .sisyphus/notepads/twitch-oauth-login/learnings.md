@@ -1,3 +1,5 @@
 - Added nullable Twitch profile fields to the shared Pin type so API responses and future migration columns stay aligned.
 - Kept the pins GET query in sync with the schema by selecting the new Twitch columns.
 - For env wiring, keep `.env.example` and `docker-compose.yml` in sync and avoid duplicating existing placeholders.
+- Kept the NextAuth route handler minimal in App Router by delegating all provider configuration to `lib/auth.ts` and exporting the same handler as both `GET` and `POST`.
+- Split the `useCurrentUser` hook into `lib/auth-client.ts` and re-exported it from `lib/auth.ts` so server auth options can coexist with a client hook without build-time client/server boundary issues.
