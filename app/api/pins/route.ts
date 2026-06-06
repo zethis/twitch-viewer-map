@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import pool from "@/lib/db";
 import { checkRateLimit } from "@/lib/rate-limit";
 import type { CreatePinBody, Pin } from "@/lib/types";
+import { getServerSession } from "@/lib/auth";
 
 export async function GET() {
 	try {
@@ -23,6 +24,9 @@ export async function POST(request: NextRequest) {
 	if (checkRateLimit(request)) {
 		return NextResponse.json({ error: "Too many requests" }, { status: 429 });
 	}
+
+	const session = await getServerSession();
+	const sessionUser = session?.user ?? null;
 
 	let body: CreatePinBody;
 	try {
@@ -74,8 +78,8 @@ export async function POST(request: NextRequest) {
 
 	try {
 		const result = await pool.query<Pin>(
-			"INSERT INTO pins (city, username, lat, lng) VALUES ($1, $2, $3, $4) RETURNING *",
-			[city.trim(), normalizedUsername, lat, lng],
+			"INSERT INTO pins (city, username, lat, lng, twitch_id, display_name, profile_image_url) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+			[city.trim(), normalizedUsername, lat, lng, sessionUser?.id ?? null, sessionUser?.name ?? null, sessionUser?.image ?? null],
 		);
 		return NextResponse.json(result.rows[0], { status: 201 });
 	} catch (err) {
