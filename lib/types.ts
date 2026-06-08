@@ -5,6 +5,9 @@ export interface Pin {
   lat: number
   lng: number
   created_at: string
+  twitch_id: string | null
+  display_name: string | null
+  profile_image_url: string | null
 }
 
 export interface CreatePinBody {
@@ -12,6 +15,9 @@ export interface CreatePinBody {
   username?: string
   lat: number
   lng: number
+  twitch_id?: string | null
+  display_name?: string | null
+  profile_image_url?: string | null
 }
 
 export interface GeocodeResult {

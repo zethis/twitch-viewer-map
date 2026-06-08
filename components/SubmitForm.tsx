@@ -2,12 +2,14 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { GeocodeResult } from '@/lib/types'
+import { useCurrentUser } from '@/lib/auth-client'
 
 interface SubmitFormProps {
   onPinAdded: () => void
 }
 
 export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
+  const user = useCurrentUser()
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<GeocodeResult[]>([])
   const [selected, setSelected] = useState<GeocodeResult | null>(null)
@@ -17,6 +19,10 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
   const [error, setError] = useState<string | null>(null)
   const [showDropdown, setShowDropdown] = useState(false)
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    if (user?.name) setUsername(user.name)
+  }, [user?.name])
 
   const fetchSuggestions = useCallback(async (q: string) => {
     if (q.length < 2) {
@@ -71,6 +77,11 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
           username: username.trim() || undefined,
           lat: parseFloat(selected.lat),
           lng: parseFloat(selected.lon),
+          ...(user ? {
+            twitch_id: user.id,
+            display_name: user.name,
+            profile_image_url: user.image,
+          } : {}),
         }),
       })
       if (res.status === 201) {
@@ -96,7 +107,17 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
 
   return (
     <div className="bg-white/90 backdrop-blur-sm rounded-xl shadow-2xl ring-1 ring-black/5 p-5 w-80 max-w-[calc(100vw-32px)] flex flex-col gap-2.5">
-      <h1 className="text-base font-extrabold text-gray-800">📍 Add your location</h1>
+      <div className="flex items-center justify-between mb-1">
+        <h1 className="text-base font-extrabold text-gray-800">📍 Add your location</h1>
+        {user?.image && (
+          <img src={user.image} alt={user.name ?? ''} className="w-8 h-8 rounded-full object-cover" />
+        )}
+      </div>
+      {user?.name && (
+        <div className="mb-2">
+          <span className="text-xs text-purple-600 font-medium">Logged in as {user.name}</span>
+        </div>
+      )}
 
       {/* City search */}
       <div className="relative">
@@ -141,7 +162,8 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           maxLength={25}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200"
+          readOnly={!!user}
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 disabled:bg-gray-100 disabled:cursor-default read-only:bg-gray-100 read-only:cursor-default"
         />
       </div>
 

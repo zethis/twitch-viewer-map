@@ -1,0 +1,40 @@
+
+> twitch-viewer-map@1.0.0 build
+> next build
+
+  ▲ Next.js 14.2.33
+  - Environments: .env
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully
+   Linting and checking validity of types ...
+   Collecting page data ...
+[db] initial connection failed: getaddrinfo ENOTFOUND db
+[db] initial connection failed: getaddrinfo ENOTFOUND db
+[db] initial connection failed: getaddrinfo ENOTFOUND db
+   Generating static pages (0/6) ...
+   Generating static pages (1/6) 
+   Generating static pages (2/6) 
+   Generating static pages (4/6) 
+[db] initial connection failed: getaddrinfo ENOTFOUND db
+[db] initial connection failed: getaddrinfo ENOTFOUND db
+ ✓ Generating static pages (6/6)
+   Finalizing page optimization ...
+   Collecting build traces ...
+
+Route (app)                              Size     First Load JS
+┌ ƒ /                                    7.85 kB        95.6 kB
+├ ○ /_not-found                          875 B          88.6 kB
+├ ƒ /api/auth/[...nextauth]              0 B                0 B
+├ ƒ /api/geocode                         0 B                0 B
+├ ƒ /api/pins                            0 B                0 B
+└ ƒ /api/pins/[id]                       0 B                0 B
++ First Load JS shared by all            87.7 kB
+  ├ chunks/117-47eed60c16e5d871.js       31.7 kB
+  ├ chunks/fd9d1056-f8a2d551cbb94c85.js  53.7 kB
+  └ other shared chunks (total)          2.35 kB
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
