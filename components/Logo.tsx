@@ -1,10 +1,16 @@
 export default function Logo() {
   return (
-    <svg
-      viewBox="0 0 300.02 142.65"
-      xmlns="http://www.w3.org/2000/svg"
-      style={{ width: '100%', maxWidth: '280px', display: 'block' }}
+    <a
+      href="https://www.twitch.tv/JawedCS"
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ display: 'block' }}
     >
+      <svg
+        viewBox="0 0 300.02 142.65"
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ width: '100%', maxWidth: '280px', display: 'block' }}
+      >
       <defs>
         <style>{'.cls-1{fill:#ffbc00}'}</style>
       </defs>
@@ -64,5 +70,6 @@ export default function Logo() {
         </g>
       </g>
     </svg>
+    </a>
   )
 }
