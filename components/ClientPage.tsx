@@ -88,7 +88,7 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
       <div style={{ position: 'relative', width: '100vw', height: '100vh', overflow: 'hidden' }}>
         <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} onEditPin={handlePinEdited} />
         {/* Logo - centered at top */}
-        <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, pointerEvents: 'none', width: '280px' }}>
+        <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, width: '280px' }}>
           <Logo />
         </div>
         <div
