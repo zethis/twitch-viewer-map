@@ -17,9 +17,11 @@ const MapView = dynamic(() => import('@/components/MapView'), { ssr: false })
 interface ClientPageProps {
   initialPins: Pin[]
   streamerName?: string
+  logoUrl?: string | null
+  twitchUrl?: string | null
 }
 
-export default function ClientPage({ initialPins, streamerName }: ClientPageProps) {
+export default function ClientPage({ initialPins, streamerName, logoUrl, twitchUrl }: ClientPageProps) {
   const [pins, setPins] = useState<Pin[]>(initialPins)
   const [isAdmin, setIsAdmin] = useState(false)
   const [showAdminLogin, setShowAdminLogin] = useState(false)
@@ -97,7 +99,7 @@ export default function ClientPage({ initialPins, streamerName }: ClientPageProp
         <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} onEditPin={handlePinEdited} />
         {/* Logo - centered at top */}
         <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, width: '280px' }}>
-          <Logo />
+          <Logo logoUrl={logoUrl} twitchUrl={twitchUrl} />
         </div>
         <div
           style={{

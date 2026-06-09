@@ -2,6 +2,8 @@ CREATE TABLE IF NOT EXISTS streamers (
   name VARCHAR(63) PRIMARY KEY,
   admin_password VARCHAR(255) NOT NULL DEFAULT '',
   display_name VARCHAR(255),
+  logo_url VARCHAR(1024),
+  twitch_url VARCHAR(1024),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   CONSTRAINT streamers_name_check CHECK (name ~ '^[a-zA-Z0-9_-]+$'),
   CONSTRAINT streamers_name_reserved CHECK (name NOT IN ('api', '_next', 'admin', 'favicon.ico')),
