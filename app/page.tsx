@@ -1,22 +1,46 @@
-import ClientPage from '@/components/ClientPage'
 import pool from '@/lib/db'
-import type { Pin } from '@/lib/types'
+import Link from 'next/link'
 
 export const dynamic = 'force-dynamic'
 
-async function getPins(): Promise<Pin[]> {
-  try {
-    const result = await pool.query<Pin>(
-      'SELECT id, city, username, lat, lng, created_at FROM pins ORDER BY created_at DESC'
-    )
-    return result.rows
-  } catch (err) {
-    console.error('[getPins] DB error:', err)
-    return []
-  }
+interface Streamer {
+  name: string
+  display_name: string | null
 }
 
 export default async function Home() {
-  const pins = await getPins()
-  return <ClientPage initialPins={pins} />
+  const result = await pool.query<Streamer>('SELECT name, display_name FROM streamers ORDER BY name')
+  const streamers = result.rows
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#0f172a', color: 'white', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+      <h1 style={{ fontSize: '32px', fontWeight: 700, marginBottom: '32px' }}>Twitch Viewer Maps</h1>
+      {streamers.length === 0 ? (
+        <p style={{ fontSize: '18px', color: '#94a3b8' }}>No streamers configured yet.</p>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', width: '100%', maxWidth: '400px' }}>
+          {streamers.map((streamer) => (
+            <Link
+              key={streamer.name}
+              href={`/${streamer.name}`}
+              style={{
+                display: 'block',
+                padding: '16px 24px',
+                background: 'rgba(255,255,255,0.1)',
+                borderRadius: '12px',
+                textDecoration: 'none',
+                color: 'white',
+                fontSize: '18px',
+                fontWeight: 600,
+                textAlign: 'center',
+                transition: 'background 0.2s',
+              }}
+            >
+              {streamer.display_name ?? streamer.name}
+            </Link>
+          ))}
+        </div>
+      )}
+    </div>
+  )
 }

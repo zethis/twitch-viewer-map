@@ -24,6 +24,7 @@ services:
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       TWITCH_CLIENT_ID: ${TWITCH_CLIENT_ID}
       TWITCH_CLIENT_SECRET: ${TWITCH_CLIENT_SECRET}
+      # ADMIN_PASSWORD seeds the default JawedCS streamer; additional streamers via DB
       ADMIN_PASSWORD: ${ADMIN_PASSWORD}
     depends_on:
       - db
