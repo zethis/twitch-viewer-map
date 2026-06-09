@@ -8,6 +8,7 @@ export interface Pin {
   twitch_id: string | null
   display_name: string | null
   profile_image_url: string | null
+  streamer_name: string | null
 }
 
 export interface CreatePinBody {
@@ -18,6 +19,7 @@ export interface CreatePinBody {
   twitch_id?: string | null
   display_name?: string | null
   profile_image_url?: string | null
+  streamer_name?: string | null
 }
 
 export interface GeocodeResult {

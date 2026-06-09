@@ -16,27 +16,28 @@ const MapView = dynamic(() => import('@/components/MapView'), { ssr: false })
 
 interface ClientPageProps {
   initialPins: Pin[]
+  streamerName?: string
 }
 
-export default function ClientPage({ initialPins }: ClientPageProps) {
+export default function ClientPage({ initialPins, streamerName }: ClientPageProps) {
   const [pins, setPins] = useState<Pin[]>(initialPins)
   const [isAdmin, setIsAdmin] = useState(false)
   const [showAdminLogin, setShowAdminLogin] = useState(false)
 
   useEffect(() => {
-    setIsAdmin(isAdminAuthenticated())
+    setIsAdmin(isAdminAuthenticated(streamerName || undefined))
     // Check if ?admin=true is in URL query string
     const params = new URLSearchParams(window.location.search)
     setShowAdminLogin(params.get('admin') === 'true')
-  }, [])
+  }, [streamerName])
 
   const handleAuthChange = () => {
-    setIsAdmin(isAdminAuthenticated())
+    setIsAdmin(isAdminAuthenticated(streamerName || undefined))
   }
 
   const handlePinAdded = async () => {
     try {
-      const res = await fetch('/api/pins')
+      const res = await fetch(`/api/pins?streamer=${encodeURIComponent(streamerName || '')}`)
       const data: Pin[] = await res.json()
       setPins(data)
     } catch {
@@ -45,11 +46,14 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
   }
 
   const handlePinDeleted = async (pinId: number) => {
-    const password = getAdminPassword()
+    const password = getAdminPassword(streamerName || undefined)
     try {
       const headers: Record<string, string> = {}
       if (password) {
         headers['x-admin-password'] = password
+      }
+      if (streamerName) {
+        headers['x-streamer-name'] = streamerName
       }
 
       const res = await fetch(`/api/pins/${pinId}`, {
@@ -62,24 +66,28 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
         window.alert(data.error ?? 'Failed to delete pin')
         return
       }
-      const pinsRes = await fetch('/api/pins')
+      const pinsRes = await fetch(`/api/pins?streamer=${encodeURIComponent(streamerName || '')}`)
       const data: Pin[] = await pinsRes.json()
       setPins(data)
-    } catch (err) {
-      console.error('Delete error:', err)
+    } catch {
+      window.alert('Failed to delete pin. Please try again.')
     }
   }
 
   const handlePinEdited = async (pinId: number, city: string, lat: number, lng: number) => {
-    const res = await fetch(`/api/pins/${pinId}`, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ city, lat, lng }),
-    })
-    if (res.ok) {
-      const pinsRes = await fetch('/api/pins')
-      const data: Pin[] = await pinsRes.json()
-      setPins(data)
+    try {
+      const res = await fetch(`/api/pins/${pinId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ city, lat, lng, streamer_name: streamerName }),
+      })
+      if (res.ok) {
+        const pinsRes = await fetch(`/api/pins?streamer=${encodeURIComponent(streamerName || '')}`)
+        const data: Pin[] = await pinsRes.json()
+        setPins(data)
+      }
+    } catch {
+      window.alert('Failed to update pin. Please try again.')
     }
   }
 
@@ -99,14 +107,14 @@ export default function ClientPage({ initialPins }: ClientPageProps) {
             zIndex: 1000,
           }}
         >
-          <SubmitForm onPinAdded={handlePinAdded} />
+          <SubmitForm onPinAdded={handlePinAdded} streamerName={streamerName} />
           <div className="mt-3">
             <RecentRegistrations pins={pins} />
           </div>
         </div>
         <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }} className="flex flex-col gap-2 items-end">
           <TwitchLoginButton />
-          {showAdminLogin && <AdminLogin onAuthChange={handleAuthChange} />}
+          {showAdminLogin && streamerName && <AdminLogin onAuthChange={handleAuthChange} streamerName={streamerName} />}
         </div>
       </div>
     </SessionProvider>

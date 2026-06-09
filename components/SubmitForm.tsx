@@ -6,9 +6,10 @@ import { useCurrentUser } from '@/lib/auth-client'
 
 interface SubmitFormProps {
   onPinAdded: () => void
+  streamerName?: string
 }
 
-export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
+export default function SubmitForm({ onPinAdded, streamerName }: SubmitFormProps) {
   const user = useCurrentUser()
   const [query, setQuery] = useState('')
   const [suggestions, setSuggestions] = useState<GeocodeResult[]>([])
@@ -77,6 +78,7 @@ export default function SubmitForm({ onPinAdded }: SubmitFormProps) {
           username: username.trim() || undefined,
           lat: parseFloat(selected.lat),
           lng: parseFloat(selected.lon),
+          streamer_name: streamerName,
           ...(user ? {
             twitch_id: user.id,
             display_name: user.name,

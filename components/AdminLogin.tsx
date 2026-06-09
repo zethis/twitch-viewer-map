@@ -4,19 +4,22 @@ import type { FormEvent } from 'react'
 import { useEffect, useState } from 'react'
 import { isAdminAuthenticated, setAdminAuthenticated, storeAdminPassword } from '@/lib/admin-auth'
 
+const AUTH_PROBE_PIN_ID = 99999999
+
 interface AdminLoginProps {
+  streamerName: string
   onAuthChange?: () => void
 }
 
-export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
-  const [isAdmin, setIsAdmin] = useState(() => isAdminAuthenticated())
+export default function AdminLogin({ streamerName, onAuthChange }: AdminLoginProps) {
+  const [isAdmin, setIsAdmin] = useState(() => isAdminAuthenticated(streamerName))
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
-    setIsAdmin(isAdminAuthenticated())
-  }, [])
+    setIsAdmin(isAdminAuthenticated(streamerName))
+  }, [streamerName])
 
   const handleLogin = async () => {
     if (!password.trim()) {
@@ -28,9 +31,9 @@ export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
     setError('')
 
     try {
-      const res = await fetch('/api/pins/99999999', {
+      const res = await fetch(`/api/pins/${AUTH_PROBE_PIN_ID}`, {
         method: 'DELETE',
-        headers: { 'x-admin-password': password },
+        headers: { 'x-admin-password': password, 'x-streamer-name': streamerName },
       })
 
       if (res.status === 401) {
@@ -39,8 +42,8 @@ export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
         return
       }
 
-      storeAdminPassword(password)
-      setAdminAuthenticated(true)
+      storeAdminPassword(streamerName, password)
+      setAdminAuthenticated(streamerName, true)
       setIsAdmin(true)
       setPassword('')
       setError('')
@@ -53,7 +56,7 @@ export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
   }
 
   const handleLogout = () => {
-    setAdminAuthenticated(false)
+    setAdminAuthenticated(streamerName, false)
     setIsAdmin(false)
     setPassword('')
     setError('')
@@ -77,7 +80,7 @@ export default function AdminLogin({ onAuthChange }: AdminLoginProps) {
     >
       {isAdmin ? (
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '14px', fontWeight: 700, color: '#1f2937' }}>Admin</span>
+          <span style={{ fontSize: '14px', fontWeight: 700, color: '#1f2937' }}>Admin — {streamerName}</span>
           <button
             type="button"
             onClick={handleLogout}

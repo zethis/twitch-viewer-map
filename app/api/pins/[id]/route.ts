@@ -9,9 +9,14 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     return NextResponse.json({ error: 'Invalid pin id' }, { status: 400 })
   }
 
-  const envPassword = process.env.ADMIN_PASSWORD
+  const streamerName = request.headers.get('x-streamer-name')
   const requestPassword = request.headers.get('x-admin-password')
-  const isAdmin = envPassword && requestPassword === envPassword
+
+  let isAdmin = false
+  if (streamerName && requestPassword) {
+    const streamerResult = await pool.query('SELECT admin_password FROM streamers WHERE name = $1', [streamerName])
+    isAdmin = streamerResult.rowCount !== null && streamerResult.rowCount > 0 && streamerResult.rows[0].admin_password === requestPassword
+  }
 
   const session = await getServerSession()
   const sessionUserId = session?.user?.id ?? null
@@ -22,8 +27,12 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
   try {
     if (isAdmin) {
-      const result = await pool.query('DELETE FROM pins WHERE id = $1 RETURNING id', [parsedId])
-      if (result.rowCount === 0) return NextResponse.json({ error: 'Pin not found' }, { status: 404 })
+      const pin = await pool.query('SELECT streamer_name FROM pins WHERE id = $1', [parsedId])
+      if (pin.rowCount === 0) return NextResponse.json({ error: 'Pin not found' }, { status: 404 })
+      if (pin.rows[0].streamer_name !== streamerName) {
+        return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+      }
+      await pool.query('DELETE FROM pins WHERE id = $1 RETURNING id', [parsedId])
       return NextResponse.json({ message: 'Pin deleted', id: parsedId })
     }
 
@@ -51,9 +60,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: 'Invalid pin id' }, { status: 400 })
   }
 
-  let body: { city?: string; lat?: number; lng?: number }
+  let body: { city?: string; lat?: number; lng?: number; streamer_name?: string }
   try { body = await request.json() } catch { return NextResponse.json({ error: 'Invalid JSON' }, { status: 400 }) }
-  const { city, lat, lng } = body
+  const { city, lat, lng, streamer_name } = body
 
   if (!city || typeof city !== 'string' || city.trim().length === 0) {
     return NextResponse.json({ error: 'city is required' }, { status: 400 })
@@ -65,17 +74,25 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: 'lng must be between -180 and 180' }, { status: 400 })
   }
 
-  const pin = await pool.query('SELECT twitch_id FROM pins WHERE id = $1', [parsedId])
-  if (pin.rowCount === 0) {
-    return NextResponse.json({ error: 'Pin not found' }, { status: 404 })
-  }
-  if (pin.rows[0].twitch_id !== session.user.id) {
-    return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
-  }
+  try {
+    const pin = await pool.query('SELECT twitch_id FROM pins WHERE id = $1', [parsedId])
+    if (pin.rowCount === 0) {
+      return NextResponse.json({ error: 'Pin not found' }, { status: 404 })
+    }
+    if (pin.rows[0].twitch_id !== session.user.id) {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
 
-  const result = await pool.query(
-    'UPDATE pins SET city = $1, lat = $2, lng = $3 WHERE id = $4 RETURNING *',
-    [city.trim(), lat, lng, parsedId]
-  )
-  return NextResponse.json(result.rows[0])
+    const result = await pool.query(
+      'UPDATE pins SET city = $1, lat = $2, lng = $3 WHERE id = $4 AND streamer_name = $5 RETURNING *',
+      [city.trim(), lat, lng, parsedId, streamer_name]
+    )
+    if (result.rowCount === 0) {
+      return NextResponse.json({ error: 'Pin not found' }, { status: 404 })
+    }
+    return NextResponse.json(result.rows[0])
+  } catch (err) {
+    console.error('[PUT /api/pins/:id]', err)
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+  }
 }
