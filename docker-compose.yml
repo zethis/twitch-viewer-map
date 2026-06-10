@@ -17,6 +17,8 @@ services:
     restart: unless-stopped
     ports:
       - "3000:3000"
+    volumes:
+      - ./public/logos:/app/public/logos
     environment:
       DATABASE_URL: ${DATABASE_URL}
       NODE_ENV: production

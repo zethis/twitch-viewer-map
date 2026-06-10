@@ -12,6 +12,7 @@ export default function Logo({ logoUrl, twitchUrl }: LogoProps) {
 
   const img = (
     <img
+      key={logoUrl || 'fallback'}
       src={src}
       alt="Logo"
       style={{ width: '100%', maxWidth: '280px', display: 'block' }}
