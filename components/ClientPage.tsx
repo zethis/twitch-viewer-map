@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 
 import AdminLogin from '@/components/AdminLogin'
 import Logo from '@/components/Logo'
+import LogoManager from '@/components/LogoManager'
 import RecentRegistrations from '@/components/RecentRegistrations'
 import SessionProvider from '@/components/SessionProvider'
 import SubmitForm from '@/components/SubmitForm'
@@ -25,6 +26,8 @@ export default function ClientPage({ initialPins, streamerName, logoUrl, twitchU
   const [pins, setPins] = useState<Pin[]>(initialPins)
   const [isAdmin, setIsAdmin] = useState(false)
   const [showAdminLogin, setShowAdminLogin] = useState(false)
+  const [currentLogoUrl, setCurrentLogoUrl] = useState(logoUrl)
+  const [currentTwitchUrl, setCurrentTwitchUrl] = useState(twitchUrl)
 
   useEffect(() => {
     setIsAdmin(isAdminAuthenticated(streamerName || undefined))
@@ -99,7 +102,7 @@ export default function ClientPage({ initialPins, streamerName, logoUrl, twitchU
         <MapView pins={pins} isAdmin={isAdmin} onDeletePin={handlePinDeleted} onEditPin={handlePinEdited} />
         {/* Logo - centered at top */}
         <div style={{ position: 'absolute', top: '12px', left: '50%', transform: 'translateX(-50%)', zIndex: 500, width: '280px' }}>
-          <Logo logoUrl={logoUrl} twitchUrl={twitchUrl} />
+          <Logo logoUrl={currentLogoUrl} twitchUrl={currentTwitchUrl} />
         </div>
         <div
           style={{
@@ -117,6 +120,17 @@ export default function ClientPage({ initialPins, streamerName, logoUrl, twitchU
         <div style={{ position: 'absolute', top: '16px', right: '16px', zIndex: 1000 }} className="flex flex-col gap-2 items-end">
           <TwitchLoginButton />
           {showAdminLogin && streamerName && <AdminLogin onAuthChange={handleAuthChange} streamerName={streamerName} />}
+          {isAdmin && streamerName && (
+            <div style={{ position: 'absolute', top: '80px', right: '16px', zIndex: 1000 }}>
+              <LogoManager
+                streamerName={streamerName}
+                currentLogoUrl={currentLogoUrl}
+                currentTwitchUrl={currentTwitchUrl}
+                onLogoUpdated={(url) => setCurrentLogoUrl(url)}
+                onTwitchUrlUpdated={(url) => setCurrentTwitchUrl(url)}
+              />
+            </div>
+          )}
         </div>
       </div>
     </SessionProvider>
