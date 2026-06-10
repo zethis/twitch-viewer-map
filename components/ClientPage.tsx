@@ -121,15 +121,13 @@ export default function ClientPage({ initialPins, streamerName, logoUrl, twitchU
           <TwitchLoginButton />
           {showAdminLogin && streamerName && <AdminLogin onAuthChange={handleAuthChange} streamerName={streamerName} />}
           {isAdmin && streamerName && (
-            <div style={{ position: 'absolute', top: '80px', right: '16px', zIndex: 1000 }}>
-              <LogoManager
-                streamerName={streamerName}
-                currentLogoUrl={currentLogoUrl}
-                currentTwitchUrl={currentTwitchUrl}
-                onLogoUpdated={(url) => setCurrentLogoUrl(url)}
-                onTwitchUrlUpdated={(url) => setCurrentTwitchUrl(url)}
-              />
-            </div>
+            <LogoManager
+              streamerName={streamerName}
+              currentLogoUrl={currentLogoUrl}
+              currentTwitchUrl={currentTwitchUrl}
+              onLogoUpdated={(url) => setCurrentLogoUrl(url)}
+              onTwitchUrlUpdated={(url) => setCurrentTwitchUrl(url)}
+            />
           )}
         </div>
       </div>

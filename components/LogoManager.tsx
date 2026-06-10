@@ -214,18 +214,21 @@ export default function LogoManager({
             <div style={messageStyle(logoError)}>{logoMessage}</div>
           )}
 
-          <input
-            type="file"
-            accept=".png,.svg,.jpg,.jpeg"
-            onChange={handleFileChange}
-            disabled={uploading}
-            style={{
-              ...inputStyle,
-              padding: '6px',
-              cursor: uploading ? 'not-allowed' : 'pointer',
-              opacity: uploading ? 0.6 : 1,
-            }}
-          />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <input
+              type="file"
+              accept=".png,.svg,.jpg,.jpeg"
+              onChange={handleFileChange}
+              disabled={uploading}
+              style={{
+                ...inputStyle,
+                padding: '6px',
+                cursor: uploading ? 'not-allowed' : 'pointer',
+                opacity: uploading ? 0.6 : 1,
+              }}
+            />
+            {uploading && <span style={{ fontSize: '12px', color: '#6b7280' }}>Uploading…</span>}
+          </div>
 
           {currentLogoUrl && currentLogoUrl !== '' && (
             <button
