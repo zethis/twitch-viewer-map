@@ -73,15 +73,16 @@ export async function POST(request: NextRequest, { params }: { params: { name: s
     const savePath = path.join(process.cwd(), 'public', 'logos', safeName)
     fs.writeFileSync(savePath, buffer)
 
-    if (oldLogoUrl?.startsWith('/logos/')) {
-      const oldFileName = oldLogoUrl.replace('/logos/', '')
+    if (oldLogoUrl) {
+      const prefix = oldLogoUrl.startsWith('/api/logos/') ? '/api/logos/' : '/logos/'
+      const oldFileName = oldLogoUrl.replace(prefix, '')
       const oldPath = path.join(process.cwd(), 'public', 'logos', oldFileName)
       if (fs.existsSync(oldPath)) {
         fs.unlinkSync(oldPath)
       }
     }
 
-    const newLogoUrl = `/logos/${safeName}`
+    const newLogoUrl = `/api/logos/${safeName}`
     await pool.query('UPDATE streamers SET logo_url = $1 WHERE name = $2', [
       newLogoUrl,
       params.name,
